@@ -1,6 +1,94 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import SensorCard from './components/SensorCard';
+import Admin from './components/Admin';
 import './App.css';
+
+// Device info interface
+interface DeviceInfo {
+  id: string;
+  timestamp: string;
+  userAgent: string;
+  platform: string;
+  language: string;
+  screenWidth: number;
+  screenHeight: number;
+  deviceMemory: number | null;
+  hardwareConcurrency: number;
+  cookieEnabled: boolean;
+  online: boolean;
+  batteryLevel: number | null;
+  batteryCharging: boolean | null;
+  networkType: string | null;
+  downlink: number | null;
+  rtt: number | null;
+  sensors: string[];
+}
+
+// Collect device info
+const collectDeviceInfo = async (): Promise<DeviceInfo> => {
+  const sensors = [];
+  try { new Accelerometer(); sensors.push('Accelerometer'); } catch {}
+  try { new Gyroscope(); sensors.push('Gyroscope'); } catch {}
+  try { new Magnetometer(); sensors.push('Magnetometer'); } catch {}
+  try { new AmbientLightSensor(); sensors.push('AmbientLightSensor'); } catch {}
+  try { new ProximitySensor(); sensors.push('ProximitySensor'); } catch {}
+  try { new AbsoluteOrientationSensor(); sensors.push('AbsoluteOrientationSensor'); } catch {}
+  try { new RelativeOrientationSensor(); sensors.push('RelativeOrientationSensor'); } catch {}
+  try { new GravitySensor(); sensors.push('GravitySensor'); } catch {}
+  try { new LinearAccelerationSensor(); sensors.push('LinearAccelerationSensor'); } catch {}
+
+  let batteryLevel = null;
+  let batteryCharging = null;
+  if ('getBattery' in navigator) {
+    try {
+      const battery = await navigator.getBattery();
+      batteryLevel = battery.level;
+      batteryCharging = battery.charging;
+    } catch {}
+  }
+
+  let networkType = null;
+  let downlink = null;
+  let rtt = null;
+  if ('connection' in navigator) {
+    const conn = navigator.connection;
+    if (conn) {
+      networkType = conn.effectiveType;
+      downlink = conn.downlink;
+      rtt = conn.rtt;
+    }
+  }
+
+  return {
+    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+    screenWidth: screen.width, // eslint-disable-line no-restricted-globals
+    screenHeight: screen.height, // eslint-disable-line no-restricted-globals
+    deviceMemory: (navigator as any).deviceMemory || null,
+    hardwareConcurrency: navigator.hardwareConcurrency,
+    cookieEnabled: navigator.cookieEnabled,
+    online: navigator.onLine,
+    batteryLevel,
+    batteryCharging,
+    networkType,
+    downlink,
+    rtt,
+    sensors,
+  };
+};
+
+// Add to inventory
+const addToInventory = async () => {
+  const deviceInfo = await collectDeviceInfo();
+  const existing = localStorage.getItem('deviceInventory');
+  const inventory = existing ? JSON.parse(existing) : [];
+  inventory.push(deviceInfo);
+  localStorage.setItem('deviceInventory', JSON.stringify(inventory));
+};
 
 function App() {
   const [accelerometerData, setAccelerometerData] = useState<{ x: number | null, y: number | null, z: number | null }>({ x: null, y: null, z: null });
@@ -28,6 +116,7 @@ function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    addToInventory();
     // Permission handling removed to prevent errors on unsupported permission names
     // handlePermission('accelerometer');
     // handlePermission('gyroscope');
@@ -340,13 +429,31 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>📱 Sensor PWA</h1>
-        <p>Test your device's sensors</p>
-      </header>
-      <div className="container mt-4">
-        <div className="row">
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          <div className="App">
+            <header className="app-header">
+              <div className="header-content">
+          <div className="logo-section">
+            <div className="logo">�</div>
+            <div className="brand">
+              <h1>SensorTech PWA</h1>
+              <p>Advanced Device Sensor Analytics</p>
+            </div>
+          </div>
+          <div className="status-bar">
+            <span className="status-dot online"></span>
+            <span className="status-text">Live Monitoring</span>
+            <Link to="/admin" className="btn btn-outline-light ms-3">Admin</Link>
+          </div>
+              </div>
+            </header>
+      <div className="container-fluid mt-4">
+        <div className="row justify-content-center">
+          <div className="col-12">
+            <div className="sensors-grid">
+              <div className="row">
           <div className="col-md-4 mb-4">
             <SensorCard sensorName="Accelerometer 📱" data={accelerometerData} />
           </div>
@@ -535,8 +642,15 @@ function App() {
             </div>
           )}
         </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+        </div>
+        } />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </Router>
   );
 }
 

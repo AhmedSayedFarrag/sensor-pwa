@@ -1,7 +1,7 @@
 {
-  "short_name": "Sensor PWA",
-  "name": "Sensor Test PWA",
-  "description": "A Progressive Web App for testing device sensors including accelerometer, gyroscope, magnetometer, and more.",
+  "short_name": "SensorTech",
+  "name": "SensorTech PWA",
+  "description": "Advanced device sensor analytics and monitoring platform for comprehensive hardware diagnostics.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -23,10 +23,10 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#667eea",
   "background_color": "#ffffff",
   "scope": "/",
-  "categories": ["productivity", "utilities"],
+  "categories": ["productivity", "utilities", "business"],
   "lang": "en-US",
   "orientation": "portrait-primary"
 }
