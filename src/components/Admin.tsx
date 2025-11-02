@@ -107,11 +107,13 @@ const Admin: React.FC = () => {
               <p>Device Inventory Management</p>
             </div>
           </div>
-          <button className="btn btn-secondary" onClick={exportData}>Export Data</button>
+          <div className="status-bar">
+            <button className="btn btn-outline-light" onClick={exportData}>Export Data</button>
+          </div>
         </div>
       </header>
       <div className="container-fluid mt-4">
-        <div className="row">
+        <div className="row justify-content-center">
           <div className="col-12">
             <div className="card mb-4">
               <div className="card-header">Filters</div>
@@ -144,20 +146,22 @@ const Admin: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="sensors-grid">
+            <div className="row">
               {filteredInventory.map((device) => (
-                <div key={device.id} className="card mb-4">
-                  <div className="card-header">Device ID: {device.id}</div>
-                  <div className="card-body">
-                    <p><strong>Timestamp:</strong> {new Date(device.timestamp).toLocaleString()}</p>
-                    <p><strong>Platform:</strong> {device.platform}</p>
-                    <p><strong>User Agent:</strong> {device.userAgent}</p>
-                    <p><strong>Screen:</strong> {device.screenWidth}x{device.screenHeight}</p>
-                    <p><strong>Memory:</strong> {device.deviceMemory} GB</p>
-                    <p><strong>Cores:</strong> {device.hardwareConcurrency}</p>
-                    <p><strong>Battery:</strong> {device.batteryLevel ? `${(device.batteryLevel * 100).toFixed(0)}%` : 'N/A'} ({device.batteryCharging ? 'Charging' : 'Not Charging'})</p>
-                    <p><strong>Network:</strong> {device.networkType} ({device.downlink} Mbps, {device.rtt} ms RTT)</p>
-                    <p><strong>Sensors:</strong> {device.sensors.join(', ')}</p>
+                <div key={device.id} className="col-md-4 mb-4">
+                  <div className="card">
+                    <div className="card-header">Device ID: {device.id}</div>
+                    <div className="card-body">
+                      <p><strong>Timestamp:</strong> {new Date(device.timestamp).toLocaleString()}</p>
+                      <p><strong>Platform:</strong> {device.platform}</p>
+                      <p><strong>User Agent:</strong> {device.userAgent}</p>
+                      <p><strong>Screen:</strong> {device.screenWidth}x{device.screenHeight}</p>
+                      <p><strong>Memory:</strong> {device.deviceMemory} GB</p>
+                      <p><strong>Cores:</strong> {device.hardwareConcurrency}</p>
+                      <p><strong>Battery:</strong> {device.batteryLevel ? `${(device.batteryLevel * 100).toFixed(0)}%` : 'N/A'} ({device.batteryCharging ? 'Charging' : 'Not Charging'})</p>
+                      <p><strong>Network:</strong> {device.networkType} ({device.downlink} Mbps, {device.rtt} ms RTT)</p>
+                      <p><strong>Sensors:</strong> {device.sensors.join(', ')}</p>
+                    </div>
                   </div>
                 </div>
               ))}
