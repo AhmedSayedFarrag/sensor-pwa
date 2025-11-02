@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/sensor-pwa/static/css/main.ff8d8d31.css",
+    "main.js": "/sensor-pwa/static/js/main.0ab68c6d.js",
+    "static/js/453.ea8d3be0.chunk.js": "/sensor-pwa/static/js/453.ea8d3be0.chunk.js",
+    "index.html": "/sensor-pwa/index.html",
+    "main.ff8d8d31.css.map": "/sensor-pwa/static/css/main.ff8d8d31.css.map",
+    "main.0ab68c6d.js.map": "/sensor-pwa/static/js/main.0ab68c6d.js.map",
+    "453.ea8d3be0.chunk.js.map": "/sensor-pwa/static/js/453.ea8d3be0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ff8d8d31.css",
+    "static/js/main.0ab68c6d.js"
+  ]
+}
